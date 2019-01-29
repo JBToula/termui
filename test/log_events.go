@@ -9,7 +9,7 @@ package main
 import (
 	"fmt"
 
-	ui "github.com/gizak/termui"
+	ui "github.com/JBToula/termui"
 )
 
 // logs all events to the termui window
