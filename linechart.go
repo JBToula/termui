@@ -132,6 +132,7 @@ func (lc *LineChart) renderBraille() Buffer {
 
 		minCell := lc.innerArea.Min.X + lc.labelYSpace
 		cellPos := lc.innerArea.Max.X - 1
+
 		for dataPos := len(seriesData) - 1; dataPos >= 0 && cellPos > minCell; {
 			b0, m0 := getPos(seriesData[dataPos])
 			var b1, m1 int
@@ -188,20 +189,21 @@ func (lc *LineChart) renderDot() Buffer {
 		if !ok {
 			thisLineColor = lc.defaultLineColor
 		}
-		minCell := lc.innerArea.Min.X + lc.labelYSpace
-		cellPos := lc.innerArea.Max.X - 1
-		for dataPos := len(seriesData) - 1; dataPos >= 0 && cellPos > minCell; {
+		minCell := lc.innerArea.Max.X - 1
+		cellPos := lc.innerArea.Min.X + lc.labelYSpace + 1 //lc.innerArea.Min.X + lc.labelYSpace //
+
+		for dataPos := 0; dataPos <= len(seriesData)-1 && cellPos < minCell; {
 			c := Cell{
 				Ch: lc.DotStyle,
 				Fg: thisLineColor,
 				Bg: lc.Bg,
 			}
 			x := cellPos
-			y := lc.innerArea.Min.Y + lc.innerArea.Dy() - 3 - int((seriesData[dataPos]-lc.bottomValue)/lc.scale+0.5)
+			y := lc.innerArea.Min.Y + lc.innerArea.Dy() - 2 - int((seriesData[dataPos]-lc.bottomValue)/lc.scale+0.5)
 			buf.Set(x, y, c)
 
-			cellPos--
-			dataPos--
+			cellPos++
+			dataPos++
 		}
 	}
 
@@ -241,13 +243,13 @@ func (lc *LineChart) calcLabelX() {
 
 func shortenFloatVal(x float64) string {
 	s := fmt.Sprintf("%.2f", x)
-	if len(s)-3 > 3 {
-		s = fmt.Sprintf("%.2e", x)
-	}
+	// if len(s)-3 > 3 {
+	// 	s = fmt.Sprintf("%.2e", x)
+	// }
 
-	if x < 0 {
-		s = fmt.Sprintf("%.2f", x)
-	}
+	// if x < 0 {
+	// 	s = fmt.Sprintf("%.2f", x)
+	// }
 	return s
 }
 
